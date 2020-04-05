@@ -10,7 +10,7 @@
 	//start method
 	function start() {
 		// defining variables
-		audio = document.querySelector("audio");
+		audio = document.querySelector("embed");
 		// preparing ws
 		ws = new WebSocket('ws://localhost:8080/test/main');
 		// handle events
@@ -24,6 +24,7 @@
 			blob.arrayBuffer().then(arrayBuffer=>{
 				var bytes = new Uint8Array(arrayBuffer);
 				audio.src = "data:audio/ogg;base64;"+btoa(bytes);
+				audio.play();
 			})
 		}
 
@@ -35,6 +36,6 @@
 </head>
 <body onload="start()">
 	<h1>client</h1>
-	<audio controls="controls"></audio>
+	<embed type="audio/ogg"></embed>
 </body>
 </html>

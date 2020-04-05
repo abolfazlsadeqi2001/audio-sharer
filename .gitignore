@@ -1,0 +1,7 @@
+Servers
+docker-host/
+test/target/
+test/.settings/
+test/.classpath
+test/.project
+.metadata/

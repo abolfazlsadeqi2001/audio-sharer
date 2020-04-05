@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>Test source object</title>
+<meta charset="utf-8" />
+<script type="text/javascript">
+	// general variables
+	var ws;
+	// start method load on startups
+	function start() {
+		// preparing ws
+		ws = new WebSocket('ws://localhost:8080/test/main');
+		ws.binaryType = 'blob';
+		// prepare media
+		navigator.getUserMedia = navigator.getUserMedia
+				|| navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+		// reading media
+		navigator.getUserMedia({video:false,audio:true},read,error);
+	}
+
+	function read(stream) {
+		// read from current source
+		/*var video = document.querySelector('video');
+		video.srcObject = stream;
+		video.onloadedmetadata = function(e) {
+			video.play();
+		};*/
+		// read from another source
+		const recorder = new MediaRecorder(stream);
+		recorder.ondataavailable = event => {
+			const blob = event.data;
+			ws.send(blob);
+		};
+		recorder.start(1000);
+	}
+
+	function error(e) {
+		console.log(e);
+	}
+</script>
+</head>
+<body onload="start()">
+	<h1>server</h1>
+	<video></video>
+</body>
+</html>

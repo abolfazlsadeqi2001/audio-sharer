@@ -9,6 +9,7 @@
 	function start() {
 		// preparing ws
 		ws = new WebSocket('ws://localhost:8080/test/main');
+		ws.binaryType = "arraybuffer";
 		// handle events
 		ws.onopen = function(){
 			console.log("connected");
@@ -16,11 +17,11 @@
 		
 		ws.onmessage = function(){
 			console.log("closed");
-		}
+		};
 		
 		ws.onclose = function(){
 			console.log("closed");
-		}
+		};
 	}
 </script>
 </head>

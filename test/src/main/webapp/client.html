@@ -5,23 +5,23 @@
 <script type="text/javascript">
 	// general variables
 	var ws;
-	// start method load on startups
-	function start() {
+	//start method
+	function start(){
 		// preparing ws
 		ws = new WebSocket('ws://localhost:8080/test/main');
 		ws.binaryType = "arraybuffer";
 		// handle events
-		ws.onopen = function(){
-			console.log("connected");
-		};
+		ws.addEventListener("open",function(){
+			console.log("open")
+		});
 		
-		ws.onmessage = function(){
-			console.log("closed");
-		};
+		ws.addEventListener("message",function(e){
+			console.log("received");
+		});
 		
-		ws.onclose = function(){
+		ws.addEventListener("close",function(){
 			console.log("closed");
-		};
+		});
 	}
 </script>
 </head>

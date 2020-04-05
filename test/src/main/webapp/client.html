@@ -5,18 +5,20 @@
 <script type="text/javascript">
 	// general variables
 	var ws;
+	var video;
 	//start method
 	function start(){
+		// defining variables
+		video = document.querySelector("video");
 		// preparing ws
 		ws = new WebSocket('ws://localhost:8080/test/main');
-		ws.binaryType = "arraybuffer";
 		// handle events
 		ws.addEventListener("open",function(){
 			console.log("open")
 		});
 		
 		ws.addEventListener("message",function(e){
-			console.log("received");
+			video.src = e.data;
 		});
 		
 		ws.addEventListener("close",function(){

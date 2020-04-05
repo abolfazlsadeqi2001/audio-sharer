@@ -18,7 +18,9 @@
 		});
 		
 		ws.addEventListener("message",function(e){
-			video.src =  URL.createObjectURL(e.data);
+			var blob = e.data;
+			blob.type = "audio/ogg";
+			console.log(e.data.type);
 		});
 		
 		ws.addEventListener("close",function(){

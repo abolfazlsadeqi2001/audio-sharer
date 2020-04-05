@@ -18,15 +18,16 @@
 
 	function read(stream) {
 		// read from current source
-		/*var video = document.querySelector('video');
-		video.srcObject = stream;
-		video.onloadedmetadata = function(e) {
-			video.play();
+		/*var audio = document.querySelector('audio');
+		audio.srcObject = stream;
+		audio.onloadedmetadata = function(e) {
+			audio.play();
 		};*/
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType : 'audio/ogg'});
 		recorder.ondataavailable = event => {
 			const blob = event.data;
+			console.log(event.data)
 			ws.send(blob);
 		};
 		recorder.start(1000);
@@ -39,6 +40,6 @@
 </head>
 <body onload="start()">
 	<h1>server</h1>
-	<video></video>
+	<audio></audio>
 </body>
 </html>

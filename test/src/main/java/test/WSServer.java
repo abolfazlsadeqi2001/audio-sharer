@@ -19,8 +19,6 @@ public class WSServer {
 	@OnOpen
 	public void onOpen(Session session) {
 		clients.add(session);
-		System.out.println(clients.size());
-		System.out.println("new client joint : "+session.getId());
 		
 		session.setMaxBinaryMessageBufferSize(100000);
 		session.setMaxIdleTimeout(1000000);
@@ -42,7 +40,6 @@ public class WSServer {
 	@OnClose
 	public void onClose(Session session,CloseReason closeReason) {
 		clients.remove(session);
-		System.out.println(closeReason.getReasonPhrase());
-		System.out.println("new client exit : "+session.getId());
+		System.out.println("a close because of :"+closeReason.getReasonPhrase());
 	}
 }

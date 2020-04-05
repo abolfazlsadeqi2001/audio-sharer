@@ -40,6 +40,5 @@ public class WSServer {
 	@OnClose
 	public void onClose(Session session,CloseReason closeReason) {
 		clients.remove(session);
-		System.out.println("a close because of :"+closeReason.getReasonPhrase());
 	}
 }

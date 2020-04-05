@@ -24,11 +24,9 @@
 			audio.play();
 		};*/
 		// read from another source
-		const recorder = new MediaRecorder(stream,{mimeType : 'audio/ogg'});
-		recorder.ondataavailable = event => {
-			const blob = event.data;
-			console.log(event.data)
-			ws.send(blob);
+		const recorder = new MediaRecorder(stream);
+		recorder.ondataavailable = e => {
+			ws.send(e.data);
 		};
 		recorder.start(1000);
 	}

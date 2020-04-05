@@ -14,13 +14,13 @@ import javax.websocket.server.ServerEndpoint;
 
 @ServerEndpoint("/main")
 public class WSServer {
-	Set<Session> clients = new HashSet<Session>();
+	public static Set<Session> clients = new HashSet<Session>();
 	
 	@OnOpen
 	public void onOpen(Session session) {
 		clients.add(session);
 		System.out.println(clients.size());
-		/*System.out.println("new client joint : "+session.getId());*/
+		System.out.println("new client joint : "+session.getId());
 		
 		session.setMaxBinaryMessageBufferSize(100000);
 		session.setMaxIdleTimeout(1000000);
@@ -33,7 +33,6 @@ public class WSServer {
 		clients.stream().filter(client -> !client.equals(session)).forEach(client -> {
 			try {
 				client.getBasicRemote().sendBinary(buffer);
-				System.out.println("sent");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -43,7 +42,7 @@ public class WSServer {
 	@OnClose
 	public void onClose(Session session,CloseReason closeReason) {
 		clients.remove(session);
-		/*System.out.println(closeReason.getReasonPhrase());
-		System.out.println("new client exit : "+session.getId());*/
+		System.out.println(closeReason.getReasonPhrase());
+		System.out.println("new client exit : "+session.getId());
 	}
 }

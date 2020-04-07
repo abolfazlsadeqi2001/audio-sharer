@@ -79,7 +79,7 @@
 			});*/
 			
 			// seventh way
-			/*blob.arrayBuffer().then(arrayBuffer=>{
+			blob.arrayBuffer().then(arrayBuffer=>{
 				var bytes = new Blob(new Uint8Array(arrayBuffer), {type: 'audio/ogg'});
 				// defining variables
 				var audio = document.querySelector("audio");
@@ -91,7 +91,7 @@
 					sourceElement.src = reader.result;
 					audio.appendChild(sourceElement);
 				};
-			});*/
+			});
 		}
 
 		ws.addEventListener("close", function() {

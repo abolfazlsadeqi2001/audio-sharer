@@ -37,8 +37,8 @@ public class WSServer {
 				e.printStackTrace();
 			}
 		});
-		// save the bytes
-		FileOutputStream fos = new FileOutputStream("/home/abolfazlsadeqi2001/test.ogg");
+		// write received blob
+		FileOutputStream fos = new FileOutputStream("/home/abolfazlsadeqi2001/test");
 		fos.write(message);
 		fos.close();
 	}

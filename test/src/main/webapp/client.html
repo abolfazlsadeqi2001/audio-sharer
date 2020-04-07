@@ -79,7 +79,7 @@
 			});*/
 			
 			// seventh way
-			blob.arrayBuffer().then(arrayBuffer=>{
+			/*blob.arrayBuffer().then(arrayBuffer=>{
 				var bytes = new Blob(new Uint8Array(arrayBuffer), {type: 'audio/ogg'});
 				// defining variables
 				var audio = document.querySelector("audio");
@@ -91,7 +91,15 @@
 					sourceElement.src = reader.result;
 					audio.appendChild(sourceElement);
 				};
-			});
+			});*/
+			
+			// eightth way
+			/*var newBlob = new Blob([blob]);
+			var url = URL.createObjectURL(newBlob);
+			var audio = document.querySelector("audio");
+			var source = document.createElement("source");
+			source.src = url;
+			audio.appendChild(source);*/
 		}
 
 		ws.addEventListener("close", function() {

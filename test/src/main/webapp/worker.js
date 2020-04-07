@@ -1,3 +1,5 @@
+var ws = new WebSocket("ws://192.168.42.45:8080/test/main")
+
 onmessage = function(e){
-	console.log(e.data)
+	ws.send(e.data)
 }

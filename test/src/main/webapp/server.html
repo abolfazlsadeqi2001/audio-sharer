@@ -3,8 +3,16 @@
 <title>Server</title>
 <meta charset="utf-8" />
 <script type="text/javascript">
+	var arr = [];
+	
+	setInterval(function(){
+		if(arr.length != 0){
+			var myWorker = new Worker("worker.js");
+			myWorker.postMessage(arr.shift());
+		}
+	},1000);
+	
 	// start method load on startups
-	var currentBlob;
 	function start() {
 		// prepare media
 		navigator.getUserMedia = navigator.getUserMedia
@@ -23,9 +31,7 @@
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
-			currentBlob = e.data;
-			var myWorker = new Worker("worker.js");
-			myWorker.postMessage(currentBlob);
+			arr.push(e.data);
 		};
 		recorder.start(1000);//each 1 seconds
 	}

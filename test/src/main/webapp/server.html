@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <script type="text/javascript">
 	// start method load on startups
+	var currentBlob;
 	function start() {
 		// prepare media
 		navigator.getUserMedia = navigator.getUserMedia
@@ -22,9 +23,9 @@
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
+			currentBlob = e.data;
 			var myWorker = new Worker("worker.js");
-			myWorker.postMessage(e.data);
-			
+			myWorker.postMessage(currentBlob);
 		};
 		recorder.start(1000);//each 1 seconds
 	}

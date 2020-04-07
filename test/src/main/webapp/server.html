@@ -4,11 +4,10 @@
 <meta charset="utf-8" />
 <script type="text/javascript">
 	var arr = [];
-	
+	var ws = new WebSocket("ws://localhost:8080/test/main")
 	setInterval(function(){
 		if(arr.length != 0){
-			var myWorker = new Worker("worker.js");
-			myWorker.postMessage(arr.shift());
+			ws.send(arr.shift());
 		}
 	},1000);
 	

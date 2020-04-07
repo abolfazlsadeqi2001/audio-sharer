@@ -13,19 +13,18 @@
 		var url = URL.createObjectURL(blob);
 		
 		var audio = document.querySelector("audio");
+		currentTime = audio.currentTime;
 		audio.src = url;
 	}
 	
 	function loadedData(audio){
-		console.log(currentTime+"time")
-		console.log(array.length+"length")
 		while(audio.isPlaying){}
 		audio.currentTime = currentTime;
 	}
 	//start method
 	function start() {
 		// preparing ws
-		ws = new WebSocket('ws://192.168.42.45:8080/test/main');
+		ws = new WebSocket('ws://localhost:8080/test/main');
 		// handle events
 		ws.addEventListener("open", function() {
 			console.log("open")
@@ -33,7 +32,6 @@
 
 		ws.onmessage = function(msg){
 			var blob = msg.data;
-			currentTime++;
 			array.push(blob);
 			play();
 		}

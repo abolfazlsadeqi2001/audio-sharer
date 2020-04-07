@@ -44,10 +44,18 @@
 		var audio = document.querySelector("audio");
 		audio.src = url;
 	}
+	
+	function audioEnd(audio){
+		audio.pause();
+	}
+	
+	function loadedData(audio){
+		
+	}
 </script>
 </head>
 <body onload="start()">
 	<h1>server</h1>
-	<audio autoplay="autoplay"></audio>
+	<audio autoplay="autoplay" onend="audioEnd(this)" onloadeddata="loadedData()"></audio>
 </body>
 </html>

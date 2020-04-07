@@ -5,8 +5,6 @@
 <script type="text/javascript">
 	// general variables
 	var ws;
-	var array = [];
-	var currentTime = 0;
 	// start method load on startups
 	function start() {
 		// preparing ws
@@ -28,37 +26,17 @@
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
-			array.push(e.data);
-			play();
+			ws.send(e.data);
 		};
-		recorder.start(1000);
+		recorder.start(1000);//each 1 seconds
 	}
 
 	function error(e) {
 		console.log(e);
 	}
-	
-	function play(){
-		var blob = new Blob(array,{mimeType:"audio/ogg"});
-		var url = URL.createObjectURL(blob);
-		
-		var audio = document.querySelector("audio");
-		audio.src = url;
-	}
-	
-	function audioEnd(audio){
-		console.log("audio end");
-	}
-	
-	function loadedData(audio){
-		while(audio.isPlaying){}
-		currentTime++;
-		audio.currentTime = currentTime;
-	}
 </script>
 </head>
 <body onload="start()">
 	<h1>server</h1>
-	<audio autoplay="autoplay" onend="audioEnd(this)" onloadeddata="loadedData(this)"></audio>
 </body>
 </html>

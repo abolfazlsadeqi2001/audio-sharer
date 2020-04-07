@@ -5,10 +5,27 @@
 <script type="text/javascript">
 	// general variables
 	var ws;
+	var array = [];
+	var currentTime = 0;
+	// general functions
+	function play(){
+		var blob = new Blob(array,{mimeType:"audio/ogg"});
+		var url = URL.createObjectURL(blob);
+		
+		var audio = document.querySelector("audio");
+		audio.src = url;
+	}
+	
+	function loadedData(audio){
+		console.log(currentTime+"time")
+		console.log(array.length+"length")
+		while(audio.isPlaying){}
+		audio.currentTime = currentTime;
+	}
 	//start method
 	function start() {
 		// preparing ws
-		ws = new WebSocket('ws://localhost:8080/test/main');
+		ws = new WebSocket('ws://192.168.42.45:8080/test/main');
 		// handle events
 		ws.addEventListener("open", function() {
 			console.log("open")
@@ -16,90 +33,9 @@
 
 		ws.onmessage = function(msg){
 			var blob = msg.data;
-			
-			// ALL COMMENTED WAYS HAS A PROBLEM
-			
-			// first way
-			/*var audio = document.querySelector("audio");
-			let reader = new FileReader();
-			reader.readAsDataURL(blob);
-			reader.onload = function() {
-				var sourceElement = document.createElement("source");
-				sourceElement.src = reader.result;
-				audio.appendChild(sourceElement);
-			};*/
-			
-			// second way
-			/*var audio = document.querySelector("audio");
-			
-			var sourceElement = document.createElement("source");
-			sourceElement.src = window.URL.createObjectURL(blob);
-			audio.appendChild(sourceElement);*/
-			
-			// third way
-			/*blob.text().then(txt=>{
-				var audio = document.querySelector("audio");
-				
-				var sourceElement = document.createElement("source");
-				sourceElement.src = txt.replace("OggS","data:audio/ogg;base64,");
-				audio.appendChild(sourceElement);
-			});*/
-			
-			// forth way
-			/*blob.text().then(txt=>{
-				var audio = document.querySelector("audio");
-				
-				var sourceElement = document.createElement("source");
-				sourceElement.src = txt;
-				audio.appendChild(sourceElement);
-			});*/
-			
-			//fiveth way
-			/*blob.arrayBuffer().then(arrayBuffer=>{
-				var bytes = new Uint8Array(arrayBuffer);
-				var url = "data:audio/ogg;base64;"+btoa(bytes);
-				// defining variables
-				var audio = document.querySelector("audio");
-				
-				var sourceElement = document.createElement("source");
-				sourceElement.src = url;
-				audio.appendChild(sourceElement);
-			});*/
-			
-			// sixth way
-			/*blob.arrayBuffer().then(arrayBuffer=>{
-				var bytes = new Blob(new Uint8Array(arrayBuffer), {type: 'audio/ogg'});
-				var url = URL.createObjectURL(bytes);
-				// defining variables
-				var audio = document.querySelector("audio");
-				
-				var sourceElement = document.createElement("source");
-				sourceElement.src = url;
-				audio.appendChild(sourceElement);
-			});*/
-			
-			// seventh way
-			/*blob.arrayBuffer().then(arrayBuffer=>{
-				var bytes = new Blob(new Uint8Array(arrayBuffer), {type: 'audio/ogg'});
-				// defining variables
-				var audio = document.querySelector("audio");
-				
-				let reader = new FileReader();
-				reader.readAsDataURL(bytes);
-				reader.onload = function() {
-					var sourceElement = document.createElement("source");
-					sourceElement.src = reader.result;
-					audio.appendChild(sourceElement);
-				};
-			});*/
-			
-			// eightth way
-			/*var newBlob = new Blob([blob]);
-			var url = URL.createObjectURL(newBlob);
-			var audio = document.querySelector("audio");
-			var source = document.createElement("source");
-			source.src = url;
-			audio.appendChild(source);*/
+			currentTime++;
+			array.push(blob);
+			play();
 		}
 
 		ws.addEventListener("close", function() {
@@ -110,8 +46,6 @@
 </head>
 <body onload="start()">
 	<h1>client</h1>
-	<audio autoplay="autoplay">
-
-	</audio>
+	<audio autoplay="autoplay" onloadeddata="loadedData(this)"></audio>
 </body>
 </html>

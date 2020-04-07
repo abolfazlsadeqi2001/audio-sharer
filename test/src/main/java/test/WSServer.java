@@ -1,6 +1,5 @@
 package test;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
@@ -37,10 +36,6 @@ public class WSServer {
 				e.printStackTrace();
 			}
 		});
-		// write received blob
-		FileOutputStream fos = new FileOutputStream("/home/abolfazlsadeqi2001/test");
-		fos.write(message);
-		fos.close();
 	}
 	
 	@OnClose

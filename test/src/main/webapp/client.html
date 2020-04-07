@@ -18,6 +18,15 @@
 			var blob = msg.data;
 			
 			/*var audio = document.querySelector("audio");
+			let reader = new FileReader();
+			reader.readAsDataURL(blob);
+			reader.onload = function() {
+				var sourceElement = document.createElement("source");
+				sourceElement.src = reader.result;
+				audio.appendChild(sourceElement);
+			};*/
+			
+			/*var audio = document.querySelector("audio");
 			
 			var sourceElement = document.createElement("source");
 			sourceElement.src = window.URL.createObjectURL(blob);
@@ -60,6 +69,20 @@
 				sourceElement.src = url;
 				audio.appendChild(sourceElement);
 			});*/
+			
+			blob.arrayBuffer().then(arrayBuffer=>{
+				var bytes = new Blob(new Uint8Array(arrayBuffer), {type: 'audio/ogg'});
+				// defining variables
+				var audio = document.querySelector("audio");
+				
+				let reader = new FileReader();
+				reader.readAsDataURL(bytes);
+				reader.onload = function() {
+					var sourceElement = document.createElement("source");
+					sourceElement.src = reader.result;
+					audio.appendChild(sourceElement);
+				};
+			});
 		}
 
 		ws.addEventListener("close", function() {

@@ -3,12 +3,8 @@
 <title>Server</title>
 <meta charset="utf-8" />
 <script type="text/javascript">
-	// general variables
-	var ws;
 	// start method load on startups
 	function start() {
-		// preparing ws
-		ws = new WebSocket('ws://localhost:8080/test/main');
 		// prepare media
 		navigator.getUserMedia = navigator.getUserMedia
 				|| navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -26,7 +22,9 @@
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
-			ws.send(e.data);
+			var myWorker = new Worker("worker.js");
+			myWorker.postMessage(e.data);
+			
 		};
 		recorder.start(1000);//each 1 seconds
 	}

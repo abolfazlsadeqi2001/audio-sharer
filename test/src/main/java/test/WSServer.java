@@ -16,6 +16,8 @@ import javax.websocket.server.ServerEndpoint;
 public class WSServer {
 	public static Set<Session> clients = new HashSet<Session>();
 	
+	public static long startTimePerMili = System.currentTimeMillis()/1000;
+	
 	@OnOpen
 	public void onOpen(Session session) {
 		clients.add(session);
@@ -29,6 +31,7 @@ public class WSServer {
 	public void onMessage(Session session,byte[] message) throws Exception {
 		// share bytes
 		ByteBuffer buffer = ByteBuffer.wrap(message);
+		System.out.println(System.currentTimeMillis()/1000-startTimePerMili);
 		clients.stream().filter(client -> !client.equals(session)).forEach(client -> {
 			try {
 				client.getBasicRemote().sendBinary(buffer);

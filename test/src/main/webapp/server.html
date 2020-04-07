@@ -3,13 +3,7 @@
 <title>Server</title>
 <meta charset="utf-8" />
 <script type="text/javascript">
-	var arr = [];
 	var ws = new WebSocket("ws://localhost:8080/test/main")
-	setInterval(function(){
-		if(arr.length != 0){
-			ws.send(arr.shift());
-		}
-	},1000);
 	
 	// start method load on startups
 	function start() {
@@ -24,7 +18,7 @@
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
-			arr.push(e.data);
+			ws.send(e.data)
 		};
 		recorder.start(1000);//each 1 seconds
 	}

@@ -22,12 +22,6 @@
 	}
 
 	function read(stream) {
-		// read from current source
-		/*var audio = document.querySelector('audio');
-		audio.srcObject = stream;// to use stream
-		audio.onloadedmetadata = function(e) {
-			audio.play();
-		};*/
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {

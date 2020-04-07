@@ -24,7 +24,7 @@
 			audio.play();
 		};*/
 		// read from another source
-		const recorder = new MediaRecorder(stream);
+		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
 			ws.send(e.data);
 		};

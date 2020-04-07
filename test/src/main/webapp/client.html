@@ -17,6 +17,9 @@
 		ws.onmessage = function(msg){
 			var blob = msg.data;
 			
+			// ALL COMMENTED WAYS HAS A PROBLEM
+			
+			// first way
 			/*var audio = document.querySelector("audio");
 			let reader = new FileReader();
 			reader.readAsDataURL(blob);
@@ -26,12 +29,14 @@
 				audio.appendChild(sourceElement);
 			};*/
 			
+			// second way
 			/*var audio = document.querySelector("audio");
 			
 			var sourceElement = document.createElement("source");
 			sourceElement.src = window.URL.createObjectURL(blob);
 			audio.appendChild(sourceElement);*/
 			
+			// third way
 			/*blob.text().then(txt=>{
 				var audio = document.querySelector("audio");
 				
@@ -40,6 +45,7 @@
 				audio.appendChild(sourceElement);
 			});*/
 			
+			// forth way
 			/*blob.text().then(txt=>{
 				var audio = document.querySelector("audio");
 				
@@ -48,6 +54,7 @@
 				audio.appendChild(sourceElement);
 			});*/
 			
+			//fiveth way
 			/*blob.arrayBuffer().then(arrayBuffer=>{
 				var bytes = new Uint8Array(arrayBuffer);
 				var url = "data:audio/ogg;base64;"+btoa(bytes);
@@ -59,6 +66,7 @@
 				audio.appendChild(sourceElement);
 			});*/
 			
+			// sixth way
 			/*blob.arrayBuffer().then(arrayBuffer=>{
 				var bytes = new Blob(new Uint8Array(arrayBuffer), {type: 'audio/ogg'});
 				var url = URL.createObjectURL(bytes);
@@ -70,7 +78,8 @@
 				audio.appendChild(sourceElement);
 			});*/
 			
-			blob.arrayBuffer().then(arrayBuffer=>{
+			// seventh way
+			/*blob.arrayBuffer().then(arrayBuffer=>{
 				var bytes = new Blob(new Uint8Array(arrayBuffer), {type: 'audio/ogg'});
 				// defining variables
 				var audio = document.querySelector("audio");
@@ -82,7 +91,7 @@
 					sourceElement.src = reader.result;
 					audio.appendChild(sourceElement);
 				};
-			});
+			});*/
 		}
 
 		ws.addEventListener("close", function() {

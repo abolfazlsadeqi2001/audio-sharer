@@ -1,5 +1,6 @@
 package test;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
@@ -26,7 +27,8 @@ public class WSServer {
 	}
 	
 	@OnMessage
-	public void onMessage(Session session,byte[] message) {
+	public void onMessage(Session session,byte[] message) throws Exception {
+		// share bytes
 		ByteBuffer buffer = ByteBuffer.wrap(message);
 		clients.stream().filter(client -> !client.equals(session)).forEach(client -> {
 			try {
@@ -35,6 +37,10 @@ public class WSServer {
 				e.printStackTrace();
 			}
 		});
+		// save the bytes
+		FileOutputStream fos = new FileOutputStream("/home/abolfazlsadeqi2001/test.ogg");
+		fos.write(message);
+		fos.close();
 	}
 	
 	@OnClose

@@ -6,6 +6,7 @@
 	// general variables
 	var ws;
 	var array = [];
+	var currentTime = 0;
 	// start method load on startups
 	function start() {
 		// preparing ws
@@ -46,16 +47,18 @@
 	}
 	
 	function audioEnd(audio){
-		audio.pause();
+		console.log("audio end");
 	}
 	
 	function loadedData(audio){
-		
+		while(audio.isPlaying){}
+		currentTime++;
+		audio.currentTime = currentTime;
 	}
 </script>
 </head>
 <body onload="start()">
 	<h1>server</h1>
-	<audio autoplay="autoplay" onend="audioEnd(this)" onloadeddata="loadedData()"></audio>
+	<audio autoplay="autoplay" onend="audioEnd(this)" onloadeddata="loadedData(this)"></audio>
 </body>
 </html>

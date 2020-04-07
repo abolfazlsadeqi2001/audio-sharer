@@ -17,11 +17,11 @@
 		ws.onmessage = function(msg){
 			var blob = msg.data;
 			
-			var audio = document.querySelector("audio");
+			/*var audio = document.querySelector("audio");
 			
 			var sourceElement = document.createElement("source");
 			sourceElement.src = window.URL.createObjectURL(blob);
-			audio.appendChild(sourceElement);
+			audio.appendChild(sourceElement);*/
 			
 			/*blob.text().then(txt=>{
 				var audio = document.querySelector("audio");
@@ -42,6 +42,17 @@
 			/*blob.arrayBuffer().then(arrayBuffer=>{
 				var bytes = new Uint8Array(arrayBuffer);
 				var url = "data:audio/ogg;base64;"+btoa(bytes);
+				// defining variables
+				var audio = document.querySelector("audio");
+				
+				var sourceElement = document.createElement("source");
+				sourceElement.src = url;
+				audio.appendChild(sourceElement);
+			});*/
+			
+			/*blob.arrayBuffer().then(arrayBuffer=>{
+				var bytes = new Blob(new Uint8Array(arrayBuffer), {type: 'audio/ogg'});
+				var url = URL.createObjectURL(bytes);
 				// defining variables
 				var audio = document.querySelector("audio");
 				

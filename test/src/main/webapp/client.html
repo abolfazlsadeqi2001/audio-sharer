@@ -1,16 +1,12 @@
 <html>
-<!-- blob.text().then() or blob.arrayBuffer().then() -->
 <head>
 <title>client</title>
 <meta charset="utf-8" />
 <script type="text/javascript">
 	// general variables
 	var ws;
-	var audio;
 	//start method
 	function start() {
-		// defining variables
-		audio = document.querySelector("embed");
 		// preparing ws
 		ws = new WebSocket('ws://localhost:8080/test/main');
 		// handle events
@@ -21,11 +17,38 @@
 		ws.onmessage = function(msg){
 			var blob = msg.data;
 			
-			blob.arrayBuffer().then(arrayBuffer=>{
+			var audio = document.querySelector("audio");
+			
+			var sourceElement = document.createElement("source");
+			sourceElement.src = window.URL.createObjectURL(blob);
+			audio.appendChild(sourceElement);
+			
+			/*blob.text().then(txt=>{
+				var audio = document.querySelector("audio");
+				
+				var sourceElement = document.createElement("source");
+				sourceElement.src = txt.replace("OggS","data:audio/ogg;base64,");
+				audio.appendChild(sourceElement);
+			});*/
+			
+			/*blob.text().then(txt=>{
+				var audio = document.querySelector("audio");
+				
+				var sourceElement = document.createElement("source");
+				sourceElement.src = txt;
+				audio.appendChild(sourceElement);
+			});*/
+			
+			/*blob.arrayBuffer().then(arrayBuffer=>{
 				var bytes = new Uint8Array(arrayBuffer);
-				audio.src = "data:audio/ogg;base64;"+btoa(bytes);
-				audio.play();
-			})
+				var url = "data:audio/ogg;base64;"+btoa(bytes);
+				// defining variables
+				var audio = document.querySelector("audio");
+				
+				var sourceElement = document.createElement("source");
+				sourceElement.src = url;
+				audio.appendChild(sourceElement);
+			});*/
 		}
 
 		ws.addEventListener("close", function() {
@@ -36,6 +59,8 @@
 </head>
 <body onload="start()">
 	<h1>client</h1>
-	<embed type="audio/ogg"></embed>
+	<audio autoplay="autoplay">
+
+	</audio>
 </body>
 </html>

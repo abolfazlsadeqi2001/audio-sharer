@@ -14,11 +14,11 @@
 		
 		var audio = document.querySelector("audio");
 		currentTime = audio.currentTime;
+		audio.pause();
 		audio.src = url;
-	}
-	
-	function loadedData(audio){
-		audio.currentTime = currentTime;
+		if(audio.currentTime >= currentTime){
+			audio.currentTime = currentTime;
+		}
 	}
 	//start method
 	function start() {

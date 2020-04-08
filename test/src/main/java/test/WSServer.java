@@ -31,7 +31,7 @@ public class WSServer {
 	public void onMessage(Session session,byte[] message) throws Exception {
 		// share bytes
 		ByteBuffer buffer = ByteBuffer.wrap(message);
-		System.out.println(System.currentTimeMillis()/1000-startTimePerMili);
+		//System.out.println(System.currentTimeMillis()/1000-startTimePerMili);
 		clients.stream().filter(client -> !client.equals(session)).forEach(client -> {
 			try {
 				client.getBasicRemote().sendBinary(buffer);

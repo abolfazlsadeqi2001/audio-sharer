@@ -6,19 +6,22 @@
 	// general variables
 	var ws;
 	var array = [];
-	var currentTime = 0;
 	// general functions
 	function play(){
 		var blob = new Blob(array,{mimeType:"audio/ogg"});
+		array.pop();
 		var url = URL.createObjectURL(blob);
 		
 		var audio = document.querySelector("audio");
-		currentTime = audio.currentTime;
-		audio.pause();
+		var currentTime = audio.currentTime;
+		audio.remove();
+		
+		var audio = document.createElement("audio");
+		document.body.appendChild(audio);
 		audio.src = url;
-		if(audio.currentTime >= currentTime){
-			audio.currentTime = currentTime;
-		}
+		audio.currentTime = currentTime;
+		
+		audio.play();
 	}
 	//start method
 	function start() {
@@ -43,6 +46,6 @@
 </head>
 <body onload="start()">
 	<h1>client</h1>
-	<audio onloadeddata="loadedData(this)"></audio>
+	<audio></audio>
 </body>
 </html>

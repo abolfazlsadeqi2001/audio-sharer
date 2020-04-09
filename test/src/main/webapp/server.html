@@ -3,25 +3,10 @@
 <title>Server</title>
 <meta charset="utf-8" />
 <script type="text/javascript">
-	var ws = new WebSocket("ws://localhost:8080/test/main")
+	var ws = new WebSocket("ws://localhost:8080/test/main");
+	var recorder;
 	var currentTime = 0;
 	var array = [];
-	// handle ws
-	ws.onopen = function(){
-		console.log("open");
-	}
-	
-	ws.onclose = function(){
-		console.log("close");
-	}
-	// ws interval
-	setInterval(function(){
-		console.log("array:"+array.length);
-		if(array.length != 0){
-			console.log("sent");
-			ws.send(array.shift())
-		}
-	},10000);
 	
 	// start method load on startups
 	function start() {
@@ -35,19 +20,25 @@
 	// record duration =5 => 7:51 of recording period have 1 second delay
 	function read(stream) {
 		// read from another source
-		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
+		recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
-			array.push(e.data);
+			ws.send(e.data);
 		};
-		recorder.start(20000);
+		recorder.start(5000);
 	}
 
 	function error(e) {
-		console.log(e);
+		alert(e);
+	}
+	
+	function onCloseConnection(){
+		recorder.close();
+		ws.close();
 	}
 </script>
 </head>
 <body onload="start()">
 	<h1>server</h1>
+	<button onclick="onCloseConnection();">close connection</button>
 </body>
 </html>

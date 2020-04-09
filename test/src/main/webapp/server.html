@@ -4,7 +4,10 @@
 <meta charset="utf-8" />
 <script type="text/javascript">
 	var ws = new WebSocket("ws://localhost:8080/test/main")
-	
+	var currentTime = 0;
+	setInterval(function(){
+		currentTime += 250
+	},250);
 	// start method load on startups
 	function start() {
 		// prepare media
@@ -19,8 +22,9 @@
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
 			ws.send(e.data)
+			console.log(currentTime)
 		};
-		recorder.start(1000);//each 1 seconds
+		recorder.start(1000);//each 1 second
 	}
 
 	function error(e) {

@@ -15,7 +15,10 @@
 		var currentTime = audio.currentTime;
 		audio.src = url;
 		audio.currentTime = currentTime;
-		audio.play();
+		console.log(audio.currentTime)
+		if(audio.isPlaying != true){
+			audio.play();
+		}
 	}
 	//start method
 	function start() {

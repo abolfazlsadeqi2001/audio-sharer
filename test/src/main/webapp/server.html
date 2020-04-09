@@ -3,10 +3,8 @@
 <title>Server</title>
 <meta charset="utf-8" />
 <script type="text/javascript">
-	var ws = new WebSocket("ws://localhost:8080/test/main");
-	var currentTime = 0;
-	var array = [];
-	var recorder;
+	var ws = new WebSocket("ws://localhost:8080/test/main");// to connect to database
+	var recorder;// to recrod the stream
 	
 	// start method load on startups
 	function start() {
@@ -17,12 +15,12 @@
 		navigator.getUserMedia({video:false,audio:true},read,error);
 	}
 
-	// button handlers 
+	// close stream button handler
 	function onCloseConnection(){
 		recorder.stop();
 		ws.close();
 	}
-	// stream handlers
+	// stream handlers (read event)
 	function read(stream) {
 		// read from another source
 		recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
@@ -31,18 +29,20 @@
 		};
 		recorder.start(5000);
 	}
-	
+	// stream handlers (error event)
 	function error(e) {
 		alert(e);
 	}
-	// send to other sockets
+	// send to other sockets (async (prevent stoping the recording))
 	async function send(blob){
 		ws.send(blob);
 	}
 </script>
 </head>
 <body onload="start()">
+	<!-- title -->
 	<h1>server</h1>
-	<button onclick="onCloseConnection();">close connection</button>
+	<!-- to close the stream -->
+	<button onclick="onCloseConnection();">close stream</button>
 </body>
 </html>

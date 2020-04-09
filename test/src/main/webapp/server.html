@@ -8,8 +8,8 @@
 	var blobArray = [];
 	setInterval(function(){
 		currentTime += 250;
-		ws.send(blobArray.shift());
-	},1000);
+		//ws.send(blobArray.shift());
+	},250);
 	// start method load on startups
 	function start() {
 		// prepare media
@@ -23,7 +23,6 @@
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
-			blobArray.push(e.data)
 			console.log(currentTime/1000)
 		};
 		recorder.start(1000);

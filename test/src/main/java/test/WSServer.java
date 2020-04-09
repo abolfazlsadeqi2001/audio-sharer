@@ -13,6 +13,11 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+/**
+ * this class is defined to broadcast blobs to other clients and streaming
+ * @author abolfazlsadeqi2001
+ *
+ */
 @ServerEndpoint("/main")
 public class WSServer {
 	public static Set<Session> clients = new HashSet<Session>();
@@ -20,24 +25,38 @@ public class WSServer {
 	public static Session serverSession = null;
 	public static int index;
 
+	/**
+	 * add new client to clients set<br>
+	 * send the header blob to read all blobs by audio player<br>
+	 * set some variables like time out
+	 * @param session
+	 */
 	@OnOpen
 	public void onOpen(Session session) {
+		// add the current session to set of all sessions
 		clients.add(session);
 
-		if (firstBlob != null) {
+		if (firstBlob != null) {// if header blob doesn't equal to null
 			try {
-				session.getBasicRemote().sendBinary(firstBlob);
-				session.getBasicRemote().sendText(String.valueOf(index));
+				session.getBasicRemote().sendBinary(firstBlob);// send the header blob
+				session.getBasicRemote().sendText(String.valueOf(index));// send the number of blobs that has been received by server (very important to find the position of cursor in new client)
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-
+		// set the limits for time and size
 		session.setMaxBinaryMessageBufferSize(100000000);
 		session.setMaxIdleTimeout(100000);
 		session.setMaxTextMessageBufferSize(10000000);
 	}
 
+	/**
+	 * get the blob from streamer broadcast it<br>
+	 * if there isn't a first blob(header container very important to play audio if not exists it cannot play) set the current blob as first
+	 * @param session
+	 * @param message
+	 * @throws Exception
+	 */
 	@OnMessage
 	public void onMessage(Session session, byte[] message) throws Exception {
 		// share bytes
@@ -54,12 +73,21 @@ public class WSServer {
 			}
 		});
 	}
-
+	
+	/**
+	 * when an error is happened log it
+	 * @param th
+	 */
 	@OnError
 	public void onError (Throwable th) {
 		System.out.println(th.getMessage());
 	}
 	
+	/**
+	 * after close connection remove it from our set
+	 * @param session valued by Jee
+	 * @param closeReason valued by Jee
+	 */
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
 		clients.remove(session);

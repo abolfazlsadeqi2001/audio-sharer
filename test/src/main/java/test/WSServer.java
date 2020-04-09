@@ -1,6 +1,5 @@
 package test;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
@@ -16,7 +15,6 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint("/main")
 public class WSServer {
 	public static Set<Session> clients = new HashSet<Session>();
-	
 	@OnOpen
 	public void onOpen(Session session) {
 		clients.add(session);
@@ -37,10 +35,6 @@ public class WSServer {
 				e.printStackTrace();
 			}
 		});
-		// save blob
-		FileOutputStream fos = new FileOutputStream("/home/abolfazlsadeqi2001/blobs.ogg", true);
-		fos.write(message);
-		fos.close();
 	}
 	
 	@OnClose

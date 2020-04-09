@@ -5,6 +5,7 @@
 <script type="text/javascript">
 	var ws = new WebSocket("ws://localhost:8080/test/main");// to connect to database
 	var recorder;// to recrod the stream
+	var blobTimeDuration = 20;// #depend on client.html
 	
 	// start method load on startups
 	function start() {
@@ -27,7 +28,7 @@
 		recorder.ondataavailable = e => {
 			send(e.data);
 		};
-		recorder.start(5000);
+		recorder.start(blobTimeDuration*1000);// so long but prevent delay on server because of resources and short time to send and record
 	}
 	// stream handlers (error event)
 	function error(e) {

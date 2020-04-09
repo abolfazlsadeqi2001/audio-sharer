@@ -1,5 +1,6 @@
 package test;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashSet;
@@ -16,14 +17,12 @@ import javax.websocket.server.ServerEndpoint;
 public class WSServer {
 	public static Set<Session> clients = new HashSet<Session>();
 	
-	public static long startTimePerMili = System.currentTimeMillis()/1000;
-	
 	@OnOpen
 	public void onOpen(Session session) {
 		clients.add(session);
 		
-		session.setMaxBinaryMessageBufferSize(100000);
-		session.setMaxIdleTimeout(1000000);
+		session.setMaxBinaryMessageBufferSize(100000000);
+		session.setMaxIdleTimeout(100000);
 		session.setMaxTextMessageBufferSize(10000000);
 	}
 	
@@ -31,7 +30,6 @@ public class WSServer {
 	public void onMessage(Session session,byte[] message) throws Exception {
 		// share bytes
 		ByteBuffer buffer = ByteBuffer.wrap(message);
-		//System.out.println(System.currentTimeMillis()/1000-startTimePerMili);
 		clients.stream().filter(client -> !client.equals(session)).forEach(client -> {
 			try {
 				client.getBasicRemote().sendBinary(buffer);
@@ -39,6 +37,10 @@ public class WSServer {
 				e.printStackTrace();
 			}
 		});
+		// save blob
+		FileOutputStream fos = new FileOutputStream("/home/abolfazlsadeqi2001/blobs.ogg", true);
+		fos.write(message);
+		fos.close();
 	}
 	
 	@OnClose

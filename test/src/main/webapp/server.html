@@ -5,11 +5,24 @@
 <script type="text/javascript">
 	var ws = new WebSocket("ws://localhost:8080/test/main")
 	var currentTime = 0;
-	var blobArray = [];
+	var array = [];
+	// handle ws
+	ws.onopen = function(){
+		console.log("open");
+	}
+	
+	ws.onclose = function(){
+		console.log("close");
+	}
+	// ws interval
 	setInterval(function(){
-		currentTime += 250;
-		//ws.send(blobArray.shift());
-	},250);
+		console.log("array:"+array.length);
+		if(array.length != 0){
+			console.log("sent");
+			ws.send(array.shift())
+		}
+	},10000);
+	
 	// start method load on startups
 	function start() {
 		// prepare media
@@ -19,13 +32,14 @@
 		navigator.getUserMedia({video:false,audio:true},read,error);
 	}
 
+	// record duration =5 => 7:51 of recording period have 1 second delay
 	function read(stream) {
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
-			console.log(currentTime/1000)
+			array.push(e.data);
 		};
-		recorder.start(1000);
+		recorder.start(20000);
 	}
 
 	function error(e) {

@@ -4,9 +4,9 @@
 <meta charset="utf-8" />
 <script type="text/javascript">
 	var ws = new WebSocket("ws://localhost:8080/test/main");
-	var recorder;
 	var currentTime = 0;
 	var array = [];
+	var recorder;
 	
 	// start method load on startups
 	function start() {
@@ -17,23 +17,27 @@
 		navigator.getUserMedia({video:false,audio:true},read,error);
 	}
 
-	// record duration =5 => 7:51 of recording period have 1 second delay
+	// button handlers 
+	function onCloseConnection(){
+		recorder.stop();
+		ws.close();
+	}
+	// stream handlers
 	function read(stream) {
 		// read from another source
 		recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
-			ws.send(e.data);
+			send(e.data);
 		};
 		recorder.start(5000);
 	}
-
+	
 	function error(e) {
 		alert(e);
 	}
-	
-	function onCloseConnection(){
-		recorder.close();
-		ws.close();
+	// send to other sockets
+	async function send(blob){
+		ws.send(blob);
 	}
 </script>
 </head>

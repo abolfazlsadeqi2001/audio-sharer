@@ -5,8 +5,8 @@
 <script type="text/javascript">
 	// general variables
 	var ws = new WebSocket('ws://localhost:8080/test/main');
+	var isUseDuration = false;
 	var currentTime = 0;
-	var array = [];
 	var audio;
 	// general functions
 	function play(e){
@@ -14,8 +14,14 @@
 		var blob = new Blob(array,{mimeType:"audio/ogg"});
 		var url = URL.createObjectURL(blob);
 
-		currentTime = audio.currentTime;
+		if(!isUseDuration){
+			currentTime = audio.currentTime;
+			isUseDuration = false;
+		}
 		audio.src = url;
+	}
+	
+	function loadNewMusic(){
 		audio.currentTime = currentTime;
 		if(audio.paused){
 			audio.play();
@@ -24,6 +30,7 @@
 	
 	function finishAudio(){
 		currentTime = audio.duration;
+		isUseDuration = true;
 	}
 	//start method is called on startup
 	function start() {
@@ -45,6 +52,6 @@
 </head>
 <body onload="start()">
 	<h1>client</h1>
-	<audio onended="finishAudio()"></audio>
+	<audio onended="finishAudio()" onloadedmetadata="loadNewMusic()"></audio>
 </body>
 </html>

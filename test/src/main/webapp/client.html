@@ -4,26 +4,35 @@
 <meta charset="utf-8" />
 <script type="text/javascript">
 	// general variables
-	var ws = new WebSocket('ws://localhost:8080/test/main');
-	var isUseDuration = false;
+	var ws ;
+	var isSetCurrentTime = false;
 	var currentTime = 0;
+	var blobTimeDuration = 5;
 	var array = [];
 	var audio;
 	// general functions
-	function play(e){
-		array.push(e);
+	async function play(e){
+		while(array.length > 1){
+			array.pop();
+		}
+		array.push(e)
 		var blob = new Blob(array,{mimeType:"audio/ogg"});
 		var url = URL.createObjectURL(blob);
 
-		if(!isUseDuration){
+		if(!isSetCurrentTime){
 			currentTime = audio.currentTime;
-			isUseDuration = false;
+		}else{
+			isSetCurrentTime = false;
 		}
 		audio.src = url;
 	}
 	
 	function loadNewMusic(){
-		audio.currentTime = currentTime;
+		if(audio.duration > currentTime){
+			audio.currentTime = currentTime;
+		}else{
+			audio.currentTime = 0;
+		}
 		if(audio.paused){
 			audio.play();
 		}
@@ -31,10 +40,11 @@
 	
 	function finishAudio(){
 		currentTime = audio.duration;
-		isUseDuration = true;
+		isSetCurrentTime = true;
 	}
 	//start method is called on startup
 	function start() {
+		ws = new WebSocket('ws://localhost:8080/test/main');
 		audio = document.querySelector("audio");
 		// handle events
 		ws.onopen = function() {
@@ -42,7 +52,12 @@
 		};
 
 		ws.onmessage = function(e){
-			play(e.data);
+			if(typeof e.data === "string"){
+				currentTime = Number(e.data)*blobTimeDuration;
+				isSetCurrentTime = true;
+			}else{
+				play(e.data);
+			}
 		};
 
 		ws.onclose = function() {
@@ -53,6 +68,6 @@
 </head>
 <body onload="start()">
 	<h1>client</h1>
-	<audio onended="finishAudio()" onloadedmetadata="loadNewMusic()"></audio>
+	<audio onended="finishAudio()" onloadedmetadata="loadNewMusic()" controls="controls"></audio>
 </body>
 </html>

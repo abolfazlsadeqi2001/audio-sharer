@@ -5,9 +5,11 @@
 <script type="text/javascript">
 	var ws = new WebSocket("ws://localhost:8080/test/main")
 	var currentTime = 0;
+	var blobArray = [];
 	setInterval(function(){
-		currentTime += 250
-	},250);
+		currentTime += 250;
+		ws.send(blobArray.shift());
+	},1000);
 	// start method load on startups
 	function start() {
 		// prepare media
@@ -21,10 +23,10 @@
 		// read from another source
 		const recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
 		recorder.ondataavailable = e => {
-			ws.send(e.data)
-			console.log(currentTime)
+			blobArray.push(e.data)
+			console.log(currentTime/1000)
 		};
-		recorder.start(1000);//each 1 second
+		recorder.start(1000);
 	}
 
 	function error(e) {

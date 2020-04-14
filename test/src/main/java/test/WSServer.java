@@ -25,7 +25,7 @@ public class WSServer {
 	public static Session serverSession = null;
 	private static final int MAX_BINARRY_MESSAGE = 400 * 1024;// the heaviest size that has been gained
 	private static final int MAX_TEXT_MESSAGE = 1024;// 1KB as default
-	private static final int MAX_TIME_OUT = 30 * 1000;
+	private static final int MAX_TIME_OUT = 40 * 1000;
 	public static int index;
 
 	/**

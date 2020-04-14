@@ -1,17 +1,30 @@
+<%@page import="configurations.sound.streaming.DefaultStreamingValues"%>
 <html>
 <head>
 <title>Server</title>
 <meta charset="utf-8" />
 <script type="text/javascript">
-	var ws = new WebSocket("wss://localhost:8443/test/main");// to connect to database
-	var blobTimeDuration = 20;// #depend on client.html
+	var host = <%
+	String host = request.getLocalAddr();
+	if(host.equals("127.0.0.1")){
+		host = "localhost";
+	}
+	
+	out.print("'");
+	out.print(host);
+	out.print("'");
+	%>;
+	var port = <% out.print(request.getLocalPort()); %>;
+	var url = "wss://"+host+":"+port+"/test/main";
+	var ws = new WebSocket(url);// to connect to database
+	var blobTimeDuration = <% out.print(DefaultStreamingValues.getDelay()); %>;// #depend on client.html
 	var recorder;// to recrod the stream
 	ws.onopen = function (){
 		console.log("open")
-	}
+	};
 	ws.onclose = function(){
-		console.log("close")
-	}
+		console.log("close");
+	};
 	// start method load on startups
 	function start() {
 		// prepare media
@@ -23,7 +36,11 @@
 	// stream handlers (read event)
 	function read(stream) {
 		// read from another source
-		recorder = new MediaRecorder(stream,{mimeType: "audio/ogg"});
+		recorder = new MediaRecorder(stream,{mimeType: <%
+			out.print("'");
+			out.print(DefaultStreamingValues.getMimeType());
+			out.print("'");
+			%>});
 		recorder.ondataavailable = e => {
 			send(e.data);
 		};

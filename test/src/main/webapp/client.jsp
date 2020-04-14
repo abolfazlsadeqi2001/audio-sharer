@@ -1,3 +1,4 @@
+<%@page import="configurations.sound.streaming.DefaultStreamingValues"%>
 <html>
 <head>
 <title>client</title>
@@ -9,13 +10,25 @@
 	var ws;
 	var isSetCurrentTime = false;
 	var currentTime = 0;
-	var blobTimeDuration = 20;
+	var blobTimeDuration = <% out.print(DefaultStreamingValues.getDelay()); %>;
 	var array = [];
 	var audio;
 	//start method is called on startup
 	function start() {
 		// value the general variables
-		ws = new WebSocket('wss://localhost:8443/test/main');
+		var host = <% 
+		String host = request.getLocalAddr();
+		if(host.equals("127.0.0.1")){
+			host = "localhost";
+		}
+		
+		out.print("'");
+		out.print(host);
+		out.print("'");
+		%>;
+		var port = <% out.print(request.getLocalPort()); %>;
+		var url = "wss://"+host+':'+port+"/test/main";
+		ws = new WebSocket(url);
 		audio = document.querySelector("audio");
 		// ===================>handle websocket events
 		ws.onopen = function() {// log open when open connection
@@ -45,7 +58,10 @@
 		array.push(e)
 		// create a blob of our array
 		var blob = new Blob(array, {
-			mimeType : "audio/ogg"
+			mimeType : <% 
+			out.print("'");
+			out.print(DefaultStreamingValues.getMimeType());
+			out.print("'");%>
 		});
 		// create a url from our blob
 		var url = URL.createObjectURL(blob);
@@ -64,6 +80,7 @@
 			audio.currentTime = currentTime;
 		} else {
 			audio.currentTime = 0;
+			audio.pause();
 		}
 		if (audio.paused) {// if the audio player is paused play it
 			audio.play();

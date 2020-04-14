@@ -12,6 +12,29 @@
 	var blobTimeDuration = 20;
 	var array = [];
 	var audio;
+	//start method is called on startup
+	function start() {
+		// value the general variables
+		ws = new WebSocket('ws://localhost:8080/test/main');
+		audio = document.querySelector("audio");
+		// ===================>handle websocket events
+		ws.onopen = function() {// log open when open connection
+			console.log("open")
+		};
+
+		ws.onmessage = function(e) {// set audio time or play the blob
+			if (typeof e.data === "string") {// if it is a string set audio time otherwise play the e.data(blob) 
+				currentTime = Number(e.data) * blobTimeDuration;// number-of-received-blobs * every-blob-length
+				isSetCurrentTime = true;// prevent set default value for audio cursor
+			} else {
+				play(e.data);
+			}
+		};
+
+		ws.onclose = function() {// log close when close connection
+			console.log("closed");
+		};
+	}
 	// general functions
 	async function play(e) {// play the blob
 		// remove all indexes except for first one (which include headers very necessary for read)
@@ -50,29 +73,6 @@
 	function finishAudio() {
 		currentTime = audio.duration;// when the audio finished the cursor is going to place 0 but if the finish audio happened because of slow connection and after that we get a blob and our audio length is changed we don't now to start from where and we must play form 0
 		isSetCurrentTime = true;// prevent set default value for audio cursor
-	}
-	//start method is called on startup
-	function start() {
-		// value the general variables
-		ws = new WebSocket('ws://localhost:8080/test/main');
-		audio = document.querySelector("audio");
-		// ===================>handle events
-		ws.onopen = function() {// log open when open connection
-			console.log("open")
-		};
-
-		ws.onmessage = function(e) {// set audio time or play the blob
-			if (typeof e.data === "string") {// if it is a string set audio time otherwise play the e.data(blob) 
-				currentTime = Number(e.data) * blobTimeDuration;// number-of-received-blobs * every-blob-length
-				isSetCurrentTime = true;// prevent set default value for audio cursor
-			} else {
-				play(e.data);
-			}
-		};
-
-		ws.onclose = function() {// log close when close connection
-			console.log("closed");
-		};
 	}
 </script>
 </head>

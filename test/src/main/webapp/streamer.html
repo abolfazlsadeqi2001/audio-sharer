@@ -4,8 +4,8 @@
 <meta charset="utf-8" />
 <script type="text/javascript">
 	var ws = new WebSocket("ws://localhost:8080/test/main");// to connect to database
-	var recorder;// to recrod the stream
 	var blobTimeDuration = 20;// #depend on client.html
+	var recorder;// to recrod the stream
 	
 	// start method load on startups
 	function start() {
@@ -14,12 +14,6 @@
 				|| navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 		// reading media
 		navigator.getUserMedia({video:false,audio:true},read,error);
-	}
-
-	// close stream button handler
-	function onCloseConnection(){
-		recorder.stop();
-		ws.close();
 	}
 	// stream handlers (read event)
 	function read(stream) {
@@ -37,6 +31,11 @@
 	// send to other sockets (async (prevent stoping the recording))
 	async function send(blob){
 		ws.send(blob);
+	}
+	// on closestreambutton click
+	function onCloseConnection(){
+		recorder.stop();
+		ws.close();
 	}
 </script>
 </head>

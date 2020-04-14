@@ -6,7 +6,12 @@
 	var ws = new WebSocket("wss://localhost:8443/test/main");// to connect to database
 	var blobTimeDuration = 20;// #depend on client.html
 	var recorder;// to recrod the stream
-	
+	ws.onopen = function (){
+		console.log("open")
+	}
+	ws.onclose = function(){
+		console.log("close")
+	}
 	// start method load on startups
 	function start() {
 		// prepare media

@@ -23,6 +23,9 @@ public class WSServer {
 	public static Set<Session> clients = new HashSet<Session>();
 	public static ByteBuffer firstBlob = null;
 	public static Session serverSession = null;
+	private static final int MAX_BINARRY_MESSAGE = 400 * 1024;// the heaviest size that has been gained
+	private static final int MAX_TEXT_MESSAGE = 1024;// 1KB as default
+	private static final int MAX_TIME_OUT = 30 * 1000;
 	public static int index;
 
 	/**
@@ -45,9 +48,9 @@ public class WSServer {
 			}
 		}
 		// set the limits for time and size
-		session.setMaxBinaryMessageBufferSize(100000000);
-		session.setMaxIdleTimeout(100000);
-		session.setMaxTextMessageBufferSize(10000000);
+		session.setMaxBinaryMessageBufferSize(MAX_BINARRY_MESSAGE);
+		session.setMaxIdleTimeout(MAX_TIME_OUT);
+		session.setMaxTextMessageBufferSize(MAX_TEXT_MESSAGE);
 	}
 
 	/**
@@ -59,6 +62,7 @@ public class WSServer {
 	 */
 	@OnMessage
 	public void onMessage(Session session, byte[] message) throws Exception {
+		System.out.println(message.length/1024);
 		// share bytes
 		ByteBuffer buffer = ByteBuffer.wrap(message);
 		if (firstBlob == null) {

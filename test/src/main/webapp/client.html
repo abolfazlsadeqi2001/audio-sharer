@@ -15,7 +15,7 @@
 	//start method is called on startup
 	function start() {
 		// value the general variables
-		ws = new WebSocket('ws://localhost:8080/test/main');
+		ws = new WebSocket('wss://localhost:8443/test/main');
 		audio = document.querySelector("audio");
 		// ===================>handle websocket events
 		ws.onopen = function() {// log open when open connection

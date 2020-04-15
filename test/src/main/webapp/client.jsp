@@ -25,7 +25,7 @@
 		out.print(host);
 		out.print("'");%>;
 		var port = <%out.print(request.getLocalPort());%>;
-		var url = "wss://"+host+':'+port+"/test/main";
+		var url = "wss://"+host+':'+port+"/test/client";
 		ws = new WebSocket(url);
 		audio = document.querySelector("audio");
 		// ===================>handle websocket events

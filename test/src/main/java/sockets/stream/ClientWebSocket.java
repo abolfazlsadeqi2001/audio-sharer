@@ -1,4 +1,4 @@
-package test;
+package sockets.stream;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
-import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
@@ -18,15 +17,9 @@ import javax.websocket.server.ServerEndpoint;
  * @author abolfazlsadeqi2001
  *
  */
-@ServerEndpoint("/main")
-public class WSServer {
+@ServerEndpoint("/client")
+public class ClientWebSocket extends StreamWebSocketParent {
 	public static Set<Session> clients = new HashSet<Session>();
-	public static ByteBuffer firstBlob = null;
-	public static Session serverSession = null;
-	private static final int MAX_BINARRY_MESSAGE = 400 * 1024;// the heaviest size that has been gained
-	private static final int MAX_TEXT_MESSAGE = 1024;// 1KB as default
-	private static final int MAX_TIME_OUT = 40 * 1000;
-	public static int index;
 
 	/**
 	 * add new client to clients set<br>
@@ -38,11 +31,11 @@ public class WSServer {
 	public void onOpen(Session session) {
 		// add the current session to set of all sessions
 		clients.add(session);
-
-		if (firstBlob != null) {// if header blob doesn't equal to null
+		// if header blob is defined send it to client which is very important to read other blobs
+		if (StreamerWebSocket.getHeaderBlob() != null) {
 			try {
-				session.getBasicRemote().sendBinary(firstBlob);// send the header blob
-				session.getBasicRemote().sendText(String.valueOf(index));// send the number of blobs that has been received by server (very important to find the position of cursor in new client)
+				session.getBasicRemote().sendBinary(StreamerWebSocket.getHeaderBlob());// send the header blob
+				session.getBasicRemote().sendText(String.valueOf(StreamerWebSocket.getCurrentMessageIndex()));// send the number of blobs that has been received by server (very important to find the position of cursor in new client)
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -53,23 +46,18 @@ public class WSServer {
 		session.setMaxTextMessageBufferSize(MAX_TEXT_MESSAGE);
 	}
 
-	/**
-	 * get the blob from streamer broadcast it<br>
-	 * if there isn't a first blob(header container very important to play audio if not exists it cannot play) set the current blob as first
-	 * @param session
-	 * @param message
-	 * @throws Exception
-	 */
-	@OnMessage
-	public void onMessage(Session session, byte[] message) throws Exception {
-		System.out.println(message.length/1024);
-		// share bytes
-		ByteBuffer buffer = ByteBuffer.wrap(message);
-		if (firstBlob == null) {
-			firstBlob = buffer;
-		}
-		index++;
-		clients.stream().filter(client -> !client.equals(session)).forEach(client -> {
+	public static void closeAllClients() {
+		clients.forEach(client ->{
+			try {
+				client.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+	
+	public static void broadCast(ByteBuffer buffer){
+		clients.forEach(client -> {
 			try {
 				client.getBasicRemote().sendBinary(buffer);
 			} catch (IOException e) {

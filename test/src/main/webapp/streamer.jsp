@@ -13,7 +13,7 @@
 	out.print(host);
 	out.print("'");%>;
 	var port = <%out.print(request.getLocalPort());%>;
-	var url = "wss://"+host+":"+port+"/test/main";
+	var url = "wss://"+host+":"+port+"/test/streamer";
 	var ws = new WebSocket(url);// to connect to database
 	var blobTimeDuration = <%out.print(StreamingValues.getDelay());%>;// #depend on client.html
 	var recorder;// to recrod the stream

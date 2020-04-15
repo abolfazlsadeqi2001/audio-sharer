@@ -1,23 +1,21 @@
-<%@page import="configurations.sound.streaming.DefaultStreamingValues"%>
+<%@page import="configurations.sound.streaming.StreamingValues"%>
 <html>
 <head>
 <title>Server</title>
 <meta charset="utf-8" />
 <script type="text/javascript">
-	var host = <%
-	String host = request.getLocalAddr();
+	var host = <%String host = request.getLocalAddr();
 	if(host.equals("127.0.0.1")){
 		host = "localhost";
 	}
 	
 	out.print("'");
 	out.print(host);
-	out.print("'");
-	%>;
-	var port = <% out.print(request.getLocalPort()); %>;
+	out.print("'");%>;
+	var port = <%out.print(request.getLocalPort());%>;
 	var url = "wss://"+host+":"+port+"/test/main";
 	var ws = new WebSocket(url);// to connect to database
-	var blobTimeDuration = <% out.print(DefaultStreamingValues.getDelay()); %>;// #depend on client.html
+	var blobTimeDuration = <%out.print(StreamingValues.getDelay());%>;// #depend on client.html
 	var recorder;// to recrod the stream
 	ws.onopen = function (){
 		console.log("open")
@@ -36,11 +34,9 @@
 	// stream handlers (read event)
 	function read(stream) {
 		// read from another source
-		recorder = new MediaRecorder(stream,{mimeType: <%
-			out.print("'");
-			out.print(DefaultStreamingValues.getMimeType());
-			out.print("'");
-			%>});
+		recorder = new MediaRecorder(stream,{mimeType: <%out.print("'");
+			out.print(StreamingValues.getMimeType());
+			out.print("'");%>});
 		recorder.ondataavailable = e => {
 			send(e.data);
 		};

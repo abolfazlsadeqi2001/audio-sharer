@@ -1,4 +1,4 @@
-<%@page import="configurations.sound.streaming.DefaultStreamingValues"%>
+<%@page import="configurations.sound.streaming.StreamingValues"%>
 <html>
 <head>
 <title>client</title>
@@ -10,23 +10,21 @@
 	var ws;
 	var isSetCurrentTime = false;
 	var currentTime = 0;
-	var blobTimeDuration = <% out.print(DefaultStreamingValues.getDelay()); %>;
+	var blobTimeDuration = <%out.print(StreamingValues.getDelay());%>;
 	var array = [];
 	var audio;
 	//start method is called on startup
 	function start() {
 		// value the general variables
-		var host = <% 
-		String host = request.getLocalAddr();
+		var host = <%String host = request.getLocalAddr();
 		if(host.equals("127.0.0.1")){
 			host = "localhost";
 		}
 		
 		out.print("'");
 		out.print(host);
-		out.print("'");
-		%>;
-		var port = <% out.print(request.getLocalPort()); %>;
+		out.print("'");%>;
+		var port = <%out.print(request.getLocalPort());%>;
 		var url = "wss://"+host+':'+port+"/test/main";
 		ws = new WebSocket(url);
 		audio = document.querySelector("audio");
@@ -58,9 +56,8 @@
 		array.push(e)
 		// create a blob of our array
 		var blob = new Blob(array, {
-			mimeType : <% 
-			out.print("'");
-			out.print(DefaultStreamingValues.getMimeType());
+			mimeType : <%out.print("'");
+			out.print(StreamingValues.getMimeType());
 			out.print("'");%>
 		});
 		// create a url from our blob

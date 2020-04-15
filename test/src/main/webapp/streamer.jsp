@@ -5,7 +5,7 @@
 <meta charset="utf-8" />
 <script type="text/javascript">
 	var host = <%String host = request.getLocalAddr();
-	if(host.equals("127.0.0.1")){
+	if(host.equals("127.0.0.1") || host.equals("0:0:0:0:0:0:0:1")){
 		host = "localhost";
 	}
 	
